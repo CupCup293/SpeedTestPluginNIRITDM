@@ -1,0 +1,28 @@
+name: Publish v1.0.0
+
+on:
+  push:
+    branches: [main]
+    paths: [.github/workflows/release.yml]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Package and publish
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -eu
+          tag=v1.0.0
+          asset=network-speed-dms-plugin-v1.0.0.zip
+          if gh release view "$tag" >/dev/null 2>&1; then
+            exit 0
+          fi
+          git archive --format=zip --prefix=NetworkSpeed/ -o "$asset" HEAD -- README.md NetworkSpeed.qml desktop plugin.json wifi-row-dms-2.1.0.patch
+          gh release create "$tag" "$asset" --target "$GITHUB_SHA" --title "Internet Speed Test v1.0.0" --notes "Initial public release. Includes live download and upload gauges, automatic Cloudflare to Selectel fallback, and the optional Dux Shell 2.1.0 Wi-Fi integration patch."
