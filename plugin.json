@@ -1,0 +1,12 @@
+{
+  "id": "networkSpeed",
+  "name": "Internet Speed Test",
+  "description": "Opens a desktop speed test with live download and upload gauges.",
+  "version": "1.0.0",
+  "author": "Local",
+  "type": "daemon",
+  "component": "./NetworkSpeed.qml",
+  "icon": "speed",
+  "dependencies": ["quickshell", "python3", "curl"],
+  "permissions": ["process"]
+}

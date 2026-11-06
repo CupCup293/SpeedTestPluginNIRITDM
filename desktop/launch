@@ -1,0 +1,9 @@
+#!/bin/sh
+app_dir=$(dirname -- "$0")
+unset QT_WAYLAND_DISABLE_WINDOWDECORATION
+NETWORK_SPEED_COLORS=${1:-'{}'}
+export NETWORK_SPEED_COLORS
+if /usr/bin/qs ipc -p "$app_dir" call network-speed reveal "$NETWORK_SPEED_COLORS" 2>/dev/null | grep -qx ok; then
+    exit 0
+fi
+exec /usr/bin/qs --no-duplicate -p "$app_dir"

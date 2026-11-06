@@ -1,0 +1,49 @@
+--- a/Modules/ControlCenter/Details/NetworkDetail.qml
++++ b/Modules/ControlCenter/Details/NetworkDetail.qml
+@@ -351,6 +351,7 @@
+                     checked: NetworkService.wifiEnabled
+                     toggling: NetworkService.wifiToggling
+                     onToggled: NetworkService.toggleWifiRadio()
++                    accessory: WifiSpeedTestButton {}
+                 }
+ 
+                 CcListRow {
+--- a/Modules/Settings/NetworkWifiTab.qml
++++ b/Modules/Settings/NetworkWifiTab.qml
+@@ -193,6 +193,8 @@
+                     return I18n.tr("Not connected");
+                 }
+ 
++                WifiSpeedTestButton {}
++
+                 DToggle {
+                     anchors.verticalCenter: parent.verticalCenter
+                     checked: NetworkService.wifiEnabled
+@@ -305,6 +307,7 @@
+                     visible: NetworkService.backend === "networkmanager"
+                     onClicked: PopoutService.showHiddenNetworkModal()
+                 },
++                WifiSpeedTestButton {},
+                 DRefreshButton {
+                     tooltipText: I18n.tr("Scan")
+                     buttonSize: Theme.buttonHeightXS
+--- /dev/null
++++ b/Modules/Network/WifiSpeedTestButton.qml
+@@ -0,0 +1,17 @@
++import QtQuick
++import qs.Common
++import qs.DCommon.Widgets
++import qs.Services
++
++DActionButton {
++    readonly property var speedTest: PluginService.pluginDaemonInstances["networkSpeed"]
++
++    anchors.verticalCenter: parent.verticalCenter
++    visible: NetworkService.wifiConnected && !NetworkService.wifiToggling && !!speedTest
++    buttonSize: Theme.buttonHeightXS
++    iconSize: Theme.iconSizeMedium
++    iconName: "speed"
++    tooltipText: "Internet speed test"
++    iconColor: Theme.surfaceText
++    onClicked: speedTest?.openWindow()
++}
